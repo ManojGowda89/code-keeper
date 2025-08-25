@@ -7,7 +7,15 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public")); // serve frontend
-
+function generateUniqueId(length = 12) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  console.log("Generated unique ID:", result);
+  return result;
+}
 // PostgreSQL connection
 const sequelize = new Sequelize(
   process.env.DB_URL,
@@ -22,10 +30,16 @@ const sequelize = new Sequelize(
     logging: false
   }
 );
-
+sequelize.authenticate().then(() => console.log("Database connected!")).catch(err => console.error("Database connection error:", err));
+sequelize.sync();
 
 // Define Snippet model
 const Snippet = sequelize.define("Snippet", {
+  id: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+    defaultValue: () => generateUniqueId(Math.floor(Math.random() * (20 - 8 + 1)) + 8), // random length between 8-20
+  },
   title: { type: DataTypes.STRING, allowNull: false },
   description: { type: DataTypes.STRING, allowNull: false },
   code: { type: DataTypes.TEXT, allowNull: false },
