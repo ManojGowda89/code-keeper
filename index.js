@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public")); // serve frontend
+
 function generateUniqueId(length = 12) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
@@ -16,6 +17,7 @@ function generateUniqueId(length = 12) {
   console.log("Generated unique ID:", result);
   return result;
 }
+
 // PostgreSQL connection
 const sequelize = new Sequelize(
   process.env.DB_URL,
@@ -50,10 +52,52 @@ sequelize.sync().then(() => console.log("Database & tables ready!"));
 
 // Routes
 
-// Get all snippets
+// Get snippets with pagination
 app.get("/api/snippets", async (req, res) => {
-  const snippets = await Snippet.findAll({ order: [["createdAt", "DESC"]] });
-  res.json(snippets);
+  // Get pagination parameters
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = (page - 1) * limit;
+  const search = req.query.search || '';
+  
+  try {
+    // Create where clause for search if provided
+    let whereClause = {};
+    if (search) {
+      whereClause = {
+        [Sequelize.Op.or]: [
+          { title: { [Sequelize.Op.iLike]: `%${search}%` } },
+          { description: { [Sequelize.Op.iLike]: `%${search}%` } }
+        ]
+      };
+    }
+    
+    // Get total count for pagination info
+    const count = await Snippet.count({ where: whereClause });
+    
+    // Get snippets with pagination
+    const snippets = await Snippet.findAll({
+      where: whereClause,
+      order: [["createdAt", "DESC"]],
+      limit,
+      offset
+    });
+    
+    // Return pagination metadata along with snippets
+    res.json({
+      snippets,
+      pagination: {
+        total: count,
+        page,
+        limit,
+        pages: Math.ceil(count / limit),
+        hasMore: page < Math.ceil(count / limit)
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching snippets:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Add new snippet
@@ -100,5 +144,5 @@ app.get("/", (req, res) => {
 });
 
 // Start server
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

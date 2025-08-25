@@ -172,6 +172,40 @@
       display: none !important;
     }
     
+    /* Loading indicator styles */
+    .loader-container {
+      display: flex;
+      justify-content: center;
+      padding: 2rem 0;
+    }
+    
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 5px solid var(--light);
+      border-bottom-color: var(--primary);
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+    
+    @keyframes rotation {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .no-more-snippets {
+      text-align: center;
+      padding: 1rem;
+      color: var(--secondary);
+      font-style: italic;
+    }
+    
     @media (max-width: 575.98px) {
       .snippet {
         padding: 1rem;
@@ -223,7 +257,7 @@
         <div id="searchContainer" class="d-flex ms-auto">
           <div class="input-group">
             <span class="input-group-text"><i class="fas fa-search"></i></span>
-            <input type="text" id="search" class="form-control" placeholder="Search by title or description (regex allowed)">
+            <input type="text" id="search" class="form-control" placeholder="Search by title or description">
           </div>
         </div>
       </div>
@@ -269,6 +303,16 @@
         <i class="fas fa-info-circle me-1"></i> You are currently editing a snippet. Search is temporarily disabled.
       </div>
       <div id="snippets" class="snippets-container"></div>
+      
+      <!-- Loading indicator -->
+      <div id="loader" class="loader-container hidden">
+        <span class="loader"></span>
+      </div>
+      
+      <!-- No more snippets message -->
+      <div id="noMoreSnippets" class="no-more-snippets hidden">
+        <p>You've reached the end of your snippets!</p>
+      </div>
     </div>
   </div>
 
@@ -278,7 +322,7 @@
 
   <footer class="app-footer text-center text-muted">
     <div class="container">
-      <small>Last updated: 2025-08-25 08:50:22 UTC | User: ManojGowda89</small>
+      <small>Last updated: 2025-08-25 16:38:19 UTC | Developed by: ManojGowda mail@manojgowda.in</small>
     </div>
   </footer>
 
@@ -289,6 +333,13 @@
     let searchTimeout = null;
     let isAnySnippetBeingEdited = false;
     let activeEditId = null;
+    
+    // Pagination state
+    let currentPage = 1;
+    let hasMoreSnippets = true;
+    let isLoading = false;
+    let snippetsArray = [];
+    const SNIPPETS_PER_PAGE = 10;
 
     // Debounce function to delay search execution
     function debounce(func, delay) {
@@ -332,8 +383,18 @@
       // Show search
       document.getElementById('searchContainer').classList.remove('d-none');
       
-      // Load snippets
-      fetchSnippets();
+      // Reset pagination and load snippets
+      resetSnippetsState();
+      fetchSnippets(true);
+    }
+
+    // Reset snippets state for a fresh load
+    function resetSnippetsState() {
+      currentPage = 1;
+      hasMoreSnippets = true;
+      snippetsArray = [];
+      document.getElementById('snippets').innerHTML = "";
+      document.getElementById('noMoreSnippets').classList.add('hidden');
     }
 
     // Switch to add form view
@@ -365,99 +426,140 @@
     }
 
     // Fetch and display snippets
-    async function fetchSnippets() {
+    async function fetchSnippets(resetList = false) {
+      if (isLoading || (!hasMoreSnippets && !resetList)) return;
+      
+      // If resetting, clear current list and reset pagination
+      if (resetList) {
+        resetSnippetsState();
+      }
+      
       try {
-        const res = await fetch(API_URL);
+        // Show loader
+        isLoading = true;
+        document.getElementById('loader').classList.remove('hidden');
+        
+        // Build query parameters
+        const searchQuery = document.getElementById("search").value.trim();
+        let url = `${API_URL}?page=${currentPage}&limit=${SNIPPETS_PER_PAGE}`;
+        if (searchQuery) {
+          url += `&search=${encodeURIComponent(searchQuery)}`;
+        }
+        
+        const res = await fetch(url);
         const data = await res.json();
-        const container = document.getElementById("snippets");
-        container.innerHTML = "";
-
-        const query = document.getElementById("search").value.trim();
-        let regex;
-        try { regex = query ? new RegExp(query, "i") : null; } catch { regex = null; }
-
-        if (data.length === 0) {
+        
+        // Hide loader
+        isLoading = false;
+        document.getElementById('loader').classList.add('hidden');
+        
+        // Update pagination state
+        hasMoreSnippets = data.pagination.hasMore;
+        currentPage++;
+        
+        // If no snippets found and first page
+        if (data.snippets.length === 0 && currentPage === 2) {
+          const container = document.getElementById("snippets");
           container.innerHTML = `
             <div class="alert alert-info text-center">
               No snippets found. Add your first code snippet above!
             </div>`;
           return;
         }
-
-        const filteredData = regex 
-          ? data.filter(snippet => regex.test(snippet.title) || regex.test(snippet.description))
-          : data;
-          
-        if (filteredData.length === 0) {
+        
+        // If no snippets match search
+        if (data.snippets.length === 0 && searchQuery && currentPage === 2) {
+          const container = document.getElementById("snippets");
           container.innerHTML = `
             <div class="alert alert-info text-center">
               No snippets match your search.
             </div>`;
           return;
         }
-
-        filteredData.forEach(snippet => {
-          const encodedCode = encodeURIComponent(snippet.code);
-          
-          container.innerHTML += `
-            <div class="snippet" id="snippet-${snippet.id}">
-              <!-- View Mode -->
-              <div class="view-mode" id="view-${snippet.id}">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                  <h3 class="h5 mb-0">${escapeHtml(snippet.title)}</h3>
-                </div>
-                <p class="text-muted mb-3">${escapeHtml(snippet.description)}</p>
-                <div class="code-container mb-3">
-                  <button class="copy-btn" onclick="copyCode('${encodedCode}', this)">
-                    <i class="fas fa-copy me-1"></i> Copy
-                  </button>
-                  <pre><code class="code-block">${escapeHtml(snippet.code)}</code></pre>
-                </div>
-                <div class="d-flex flex-wrap gap-2">
-                  <button class="btn btn-warning btn-sm" onclick="toggleEditMode(${snippet.id})">
-                    <i class="fas fa-edit me-1"></i> Edit
-                  </button>
-                  <button class="btn btn-danger btn-sm" onclick="deleteSnippet(${snippet.id})">
-                    <i class="fas fa-trash-alt me-1"></i> Delete
-                  </button>
-                </div>
-              </div>
-              
-              <!-- Edit Mode (hidden by default) -->
-              <div class="edit-form hidden" id="edit-${snippet.id}">
-                <div class="mb-3">
-                  <label for="edit-title-${snippet.id}" class="form-label">Title</label>
-                  <input type="text" class="form-control" id="edit-title-${snippet.id}" value="${escapeHtml(snippet.title)}" placeholder="Title" required />
-                </div>
-                <div class="mb-3">
-                  <label for="edit-description-${snippet.id}" class="form-label">Description</label>
-                  <input type="text" class="form-control" id="edit-description-${snippet.id}" value="${escapeHtml(snippet.description)}" placeholder="Description" required />
-                </div>
-                <div class="mb-3">
-                  <label for="edit-code-${snippet.id}" class="form-label">Code</label>
-                  <textarea class="form-control" id="edit-code-${snippet.id}" rows="10" placeholder="Your code here..." required>${escapeHtml(snippet.code)}</textarea>
-                </div>
-                <div class="d-flex flex-wrap gap-2">
-                  <button class="btn btn-primary btn-sm" onclick="updateSnippet(${snippet.id})">
-                    <i class="fas fa-check me-1"></i> Save Changes
-                  </button>
-                  <button class="btn btn-secondary btn-sm" onclick="cancelEditMode(${snippet.id})">
-                    <i class="fas fa-times me-1"></i> Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-
-        // Apply syntax highlighting
-        document.querySelectorAll('pre code').forEach((block) => {
-          hljs.highlightElement(block);
-        });
+        
+        // Add snippets to array and render them
+        snippetsArray = [...snippetsArray, ...data.snippets];
+        renderSnippets(data.snippets);
+        
+        // Show end message if no more snippets
+        if (!hasMoreSnippets && snippetsArray.length > 0) {
+          document.getElementById('noMoreSnippets').classList.remove('hidden');
+        }
+        
       } catch (error) {
         console.error('Error fetching snippets:', error);
         showToast('Error loading snippets. Please try again.');
+        isLoading = false;
+        document.getElementById('loader').classList.add('hidden');
       }
+    }
+    
+    // Render snippets to DOM
+    function renderSnippets(snippets) {
+      const container = document.getElementById("snippets");
+      
+      snippets.forEach(snippet => {
+        const encodedCode = encodeURIComponent(snippet.code);
+        
+        const snippetElement = document.createElement('div');
+        snippetElement.className = 'snippet';
+        snippetElement.id = `snippet-${snippet.id}`;
+        
+        snippetElement.innerHTML = `
+          <!-- View Mode -->
+          <div class="view-mode" id="view-${snippet.id}">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h3 class="h5 mb-0">${escapeHtml(snippet.title)}</h3>
+            </div>
+            <p class="text-muted mb-3">${escapeHtml(snippet.description)}</p>
+            <div class="code-container mb-3">
+              <button class="copy-btn" onclick="copyCode('${encodedCode}', this)">
+                <i class="fas fa-copy me-1"></i> Copy
+              </button>
+              <pre><code class="code-block">${escapeHtml(snippet.code)}</code></pre>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn btn-warning btn-sm" onclick="toggleEditMode('${snippet.id}')">
+                <i class="fas fa-edit me-1"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteSnippet('${snippet.id}')">
+                <i class="fas fa-trash-alt me-1"></i> Delete
+              </button>
+            </div>
+          </div>
+          
+          <!-- Edit Mode (hidden by default) -->
+          <div class="edit-form hidden" id="edit-${snippet.id}">
+            <div class="mb-3">
+              <label for="edit-title-${snippet.id}" class="form-label">Title</label>
+              <input type="text" class="form-control" id="edit-title-${snippet.id}" value="${escapeHtml(snippet.title)}" placeholder="Title" required />
+            </div>
+            <div class="mb-3">
+              <label for="edit-description-${snippet.id}" class="form-label">Description</label>
+              <input type="text" class="form-control" id="edit-description-${snippet.id}" value="${escapeHtml(snippet.description)}" placeholder="Description" required />
+            </div>
+            <div class="mb-3">
+              <label for="edit-code-${snippet.id}" class="form-label">Code</label>
+              <textarea class="form-control" id="edit-code-${snippet.id}" rows="10" placeholder="Your code here..." required>${escapeHtml(snippet.code)}</textarea>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn btn-primary btn-sm" onclick="updateSnippet('${snippet.id}')">
+                <i class="fas fa-check me-1"></i> Save Changes
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="cancelEditMode('${snippet.id}')">
+                <i class="fas fa-times me-1"></i> Cancel
+              </button>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(snippetElement);
+      });
+
+      // Apply syntax highlighting to new snippets
+      document.querySelectorAll('pre code:not(.hljs)').forEach((block) => {
+        hljs.highlightElement(block);
+      });
     }
 
     // Toggle edit mode for a specific snippet
@@ -599,7 +701,9 @@
         document.getElementById('searchContainer').classList.remove('d-none');
         document.getElementById('edit-status-indicator').classList.remove('active');
         
-        fetchSnippets();
+        // Refresh snippets list to show updated content
+        resetSnippetsState();
+        fetchSnippets(true);
         showToast("Snippet updated successfully");
       } catch (error) {
         console.error('Error updating snippet:', error);
@@ -618,7 +722,9 @@
           throw new Error(`Server responded with ${response.status}`);
         }
         
-        fetchSnippets();
+        // Refresh snippets to reflect changes
+        resetSnippetsState();
+        fetchSnippets(true);
         showToast("Snippet deleted successfully");
       } catch (error) {
         console.error('Error deleting snippet:', error);
@@ -664,6 +770,21 @@
         .replace(/'/g, "&#039;");
     }
 
+    // Check if scrolled to bottom to load more snippets
+    function checkScrollPosition() {
+      if (isAnySnippetBeingEdited) return; // Don't load more while editing
+      
+      // Distance from bottom when to trigger loading more
+      const SCROLL_THRESHOLD = 200;
+      
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const bodyHeight = document.body.offsetHeight;
+      
+      if (scrollPosition >= bodyHeight - SCROLL_THRESHOLD && !isLoading && hasMoreSnippets) {
+        fetchSnippets();
+      }
+    }
+
     // Adjust textarea height based on content
     function autoResizeTextarea(textarea) {
       textarea.style.height = "auto";
@@ -673,8 +794,15 @@
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       // Set up debounced search
-      const debouncedSearch = debounce(fetchSnippets, 500);
+      const debouncedSearch = debounce(() => {
+        resetSnippetsState();
+        fetchSnippets(true);
+      }, 500);
+      
       document.getElementById('search').addEventListener('input', debouncedSearch);
+      
+      // Add scroll event listener for infinite scrolling
+      window.addEventListener('scroll', debounce(checkScrollPosition, 100));
       
       showCodeList(); // Default to showing code list
       
