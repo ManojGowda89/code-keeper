@@ -9,11 +9,12 @@ app.use(cors());
 app.use(express.static("public")); // serve frontend
 
 const sequelize = new Sequelize("mydatabase", "admin", "admin", {
-  host: "localhost",
+  host: "db",   // 👈 match service name in docker-compose
   port: 3306,
   dialect: "mariadb",
-  logging: console.log, // optional: logs all queries
+  logging: console.log,
 });
+
 
 
 // Define Snippet model
