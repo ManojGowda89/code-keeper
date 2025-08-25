@@ -2,19 +2,26 @@ const express = require("express");
 const { Sequelize, DataTypes } = require("sequelize");
 const cors = require("cors");
 const path = require("path");
-
+require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public")); // serve frontend
 
-const sequelize = new Sequelize("mydatabase", "admin", "admin", {
-  host: "db",   // 👈 match service name in docker-compose
-  port: 3306,
-  dialect: "mariadb",
-  logging: console.log,
-});
-
+// PostgreSQL connection
+const sequelize = new Sequelize(
+  process.env.DB_URL,
+  {
+    dialect: 'postgres',
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    },
+    logging: false
+  }
+);
 
 
 // Define Snippet model
@@ -79,5 +86,5 @@ app.get("/", (req, res) => {
 });
 
 // Start server
-const PORT = 5000;
+const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
