@@ -4,7 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code Keeper</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Highlight.js for code syntax highlighting -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
   <style>
     :root {
@@ -13,232 +18,93 @@
       --success: #4cc9f0;
       --danger: #f72585;
       --warning: #f8961e;
+      --info: #4cc9f0;
       --light: #f8f9fa;
       --dark: #212529;
-      --gray: #6c757d;
-      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       --transition: all 0.3s ease;
     }
     
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
       background-color: #f5f7fb;
-      color: var(--dark);
-      padding: 0;
-      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    header {
+    .app-header {
       background-color: var(--primary);
       color: white;
-      padding: 20px;
-      text-align: center;
-      box-shadow: var(--shadow);
+      padding: 1.5rem 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
-    h1 {
-      font-weight: 700;
-      margin: 0;
-    }
-    
-    /* Navigation Bar Styles */
     .navbar {
       background-color: white;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--shadow);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
     }
     
-    .nav-buttons {
-      display: flex;
-      gap: 10px;
-    }
-    
-    .search-nav {
-      flex-grow: 1;
-      max-width: 500px;
-      margin: 0 20px;
+    .navbar-nav .nav-link {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
       transition: var(--transition);
     }
     
-    #search {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      font-size: 16px;
+    .navbar-nav .nav-link.active {
+      background-color: var(--success);
+      color: var(--dark);
     }
     
     .form-container {
       background: white;
-      padding: 25px;
       border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin: 30px auto;
-      max-width: 800px;
-    }
-    
-    .form-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    input, textarea, select {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0 16px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 16px;
-      transition: var(--transition);
-    }
-    
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
-    }
-    
-    label {
-      font-weight: 500;
-      color: var(--dark);
-      display: block;
-      margin-bottom: 5px;
-    }
-    
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-start;
-    }
-    
-    button {
-      padding: 10px 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 16px;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary);
-      color: white;
-    }
-    
-    .btn-secondary {
-      background-color: var(--gray);
-      color: white;
-    }
-    
-    .btn-danger {
-      background-color: var(--danger);
-      color: white;
-    }
-    
-    .btn-warning {
-      background-color: var(--warning);
-      color: var(--dark);
-    }
-    
-    .btn-sm {
-      padding: 6px 12px;
-      font-size: 14px;
-    }
-    
-    button:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-    
-    .snippets-container {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      max-width: 800px;
-      margin: 0 auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
     }
     
     .snippet {
       background: white;
       border-radius: 10px;
-      box-shadow: var(--shadow);
-      padding: 20px;
-      position: relative;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
       transition: var(--transition);
     }
     
     .snippet:hover {
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    }
-    
-    .snippet-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 15px;
-    }
-    
-    .snippet-title {
-      margin: 0;
-      font-size: 22px;
-      color: var(--dark);
-    }
-    
-    .snippet-description {
-      margin-bottom: 15px;
-      color: var(--gray);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
     }
     
     .code-container {
       position: relative;
       border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 15px;
+      margin-bottom: 1rem;
     }
     
     pre {
       margin: 0;
-      padding: 16px;
+      padding: 1rem;
       border-radius: 8px;
       overflow-x: auto;
       font-family: 'Fira Code', 'Consolas', monospace;
-      font-size: 14px;
+      font-size: 0.875rem;
       line-height: 1.5;
     }
     
     .copy-btn {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: 0.5rem;
+      right: 0.5rem;
       background-color: rgba(255, 255, 255, 0.2);
       color: white;
       border: none;
       border-radius: 4px;
-      padding: 6px 10px;
-      font-size: 12px;
+      padding: 0.375rem 0.625rem;
+      font-size: 0.75rem;
       z-index: 10;
       opacity: 0.7;
       transition: var(--transition);
@@ -249,145 +115,180 @@
       background-color: rgba(255, 255, 255, 0.3);
     }
     
-    .snippet-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
+    .editing-active {
+      background-color: #f0f7ff;
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
     }
     
-    .edit-form {
+    .edit-form textarea {
+      min-height: 200px;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      resize: vertical;
+    }
+    
+    .edit-status-bar {
+      background-color: var(--warning);
+      color: var(--dark);
+      text-align: center;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      font-weight: 500;
       display: none;
     }
     
-    .edit-form.active {
+    .edit-status-bar.active {
       display: block;
     }
     
-    .view-mode.hidden {
-      display: none;
-    }
-    
-    .hidden {
-      display: none;
-    }
-    
-    .toast {
+    .toast-container {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: var(--dark);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 6px;
-      box-shadow: var(--shadow);
-      z-index: 1000;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      z-index: 1100;
+    }
+    
+    .app-toast {
+      transition: var(--transition);
       transform: translateY(100px);
       opacity: 0;
-      transition: all 0.3s ease;
     }
     
-    .toast.show {
+    .app-toast.show {
       transform: translateY(0);
       opacity: 1;
     }
     
-    .active-nav-btn {
-      background-color: var(--success);
-      color: var(--dark);
+    .app-footer {
+      margin-top: auto;
+      padding: 1.25rem 0;
+      background-color: white;
+      box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
     }
     
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
+    .hidden {
+      display: none !important;
+    }
+    
+    @media (max-width: 575.98px) {
+      .snippet {
+        padding: 1rem;
       }
+      
       .form-container {
-        padding: 15px;
+        padding: 1rem;
       }
-      .navbar {
-        flex-direction: column;
-        gap: 10px;
-      }
-      .search-nav {
+      
+      .btn-sm-block {
+        display: block;
         width: 100%;
-        max-width: none;
-        margin: 10px 0;
+        margin-bottom: 0.5rem;
       }
-      .nav-buttons {
-        width: 100%;
-        justify-content: space-between;
+      
+      .snippet-actions .btn {
+        margin-bottom: 0.5rem;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>📂 Code Keeper</h1>
+  <header class="app-header">
+    <div class="container text-center">
+      <h1 class="mb-0"><i class="fas fa-folder me-2"></i>Code Keeper</h1>
+    </div>
   </header>
 
-  <div class="navbar">
-    <div class="nav-buttons">
-      <button id="viewCodeBtn" class="btn-primary active-nav-btn" onclick="showCodeList()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M2 10a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1zm2-1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H4z"/>
-          <path d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z"/>
-          <path d="M2 7a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1z"/>
-        </svg>
-        Code
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
       </button>
-      <button id="addCodeBtn" class="btn-primary" onclick="showAddForm()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-        </svg>
-        Add Code
-      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item me-2">
+            <a id="viewCodeBtn" class="nav-link active" href="javascript:void(0)" onclick="showCodeList()">
+              <i class="fas fa-list me-1"></i> Code
+            </a>
+          </li>
+          <li class="nav-item">
+            <a id="addCodeBtn" class="nav-link" href="javascript:void(0)" onclick="showAddForm()">
+              <i class="fas fa-plus me-1"></i> Add Code
+            </a>
+          </li>
+        </ul>
+        
+        <div id="searchContainer" class="d-flex ms-auto">
+          <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <input type="text" id="search" class="form-control" placeholder="Search by title or description (regex allowed)">
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="searchContainer" class="search-nav">
-      <input type="text" id="search" placeholder="Search by title or description (regex allowed)">
-    </div>
-  </div>
+  </nav>
 
   <div class="container">
+    <!-- Add Form Section -->
     <div id="formSection" class="form-container hidden">
-      <div class="form-header">
-        <h2 id="form-title">Add New Snippet</h2>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 id="form-title" class="mb-0">Add New Snippet</h2>
       </div>
       <input type="hidden" id="snippetId" />
       
-      <label for="title">Title</label>
-      <input type="text" id="title" placeholder="Enter a descriptive title" required />
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" placeholder="Enter a descriptive title" required />
+      </div>
       
-      <label for="description">Description</label>
-      <input type="text" id="description" placeholder="Brief description of what this code does" required />
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" placeholder="Brief description of what this code does" required />
+      </div>
       
-      <label for="code">Code</label>
-      <textarea id="code" rows="8" placeholder="Paste your code here..." required></textarea>
+      <div class="mb-4">
+        <label for="code" class="form-label">Code</label>
+        <textarea class="form-control" id="code" rows="8" placeholder="Paste your code here..." required></textarea>
+      </div>
       
-      <div class="btn-group">
-        <button class="btn-primary" onclick="saveSnippet()" id="saveBtn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
-          </svg>
-          Save Snippet
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary" onclick="saveSnippet()" id="saveBtn">
+          <i class="fas fa-save me-1"></i> Save Snippet
         </button>
-        <button class="btn-secondary" onclick="cancelForm()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
-          </svg>
-          Cancel
+        <button class="btn btn-secondary" onclick="cancelForm()">
+          <i class="fas fa-times me-1"></i> Cancel
         </button>
       </div>
     </div>
 
+    <!-- Snippets List Section -->
     <div id="snippetsSection">
+      <div id="edit-status-indicator" class="edit-status-bar">
+        <i class="fas fa-info-circle me-1"></i> You are currently editing a snippet. Search is temporarily disabled.
+      </div>
       <div id="snippets" class="snippets-container"></div>
     </div>
   </div>
 
-  <div id="toast" class="toast"></div>
+  <div class="toast-container">
+    <div id="toast" class="app-toast bg-dark text-white p-3 rounded"></div>
+  </div>
 
+  <footer class="app-footer text-center text-muted">
+    <div class="container">
+      <small>Last updated: 2025-08-25 08:50:22 UTC | User: ManojGowda89</small>
+    </div>
+  </footer>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const API_URL = "/api/snippets";
     let searchTimeout = null;
+    let isAnySnippetBeingEdited = false;
+    let activeEditId = null;
 
     // Debounce function to delay search execution
     function debounce(func, delay) {
@@ -412,21 +313,49 @@
       }, duration);
     }
 
+    // Switch to code list view
     function showCodeList() {
+      // Only allow switching to code list if not in edit mode
+      if (isAnySnippetBeingEdited) {
+        showToast('Please save or cancel your edits first');
+        return;
+      }
+      
+      // Hide add form, show snippets list
       document.getElementById('formSection').classList.add('hidden');
       document.getElementById('snippetsSection').classList.remove('hidden');
-      document.getElementById('viewCodeBtn').classList.add('active-nav-btn');
-      document.getElementById('addCodeBtn').classList.remove('active-nav-btn');
-      document.getElementById('searchContainer').classList.remove('hidden');
+      
+      // Update nav buttons
+      document.getElementById('viewCodeBtn').classList.add('active');
+      document.getElementById('addCodeBtn').classList.remove('active');
+      
+      // Show search
+      document.getElementById('searchContainer').classList.remove('d-none');
+      
+      // Load snippets
       fetchSnippets();
     }
 
+    // Switch to add form view
     function showAddForm() {
+      // Only allow switching to add form if not in edit mode
+      if (isAnySnippetBeingEdited) {
+        showToast('Please save or cancel your edits first');
+        return;
+      }
+      
+      // Show add form, hide snippets list
       document.getElementById('formSection').classList.remove('hidden');
       document.getElementById('snippetsSection').classList.add('hidden');
-      document.getElementById('viewCodeBtn').classList.remove('active-nav-btn');
-      document.getElementById('addCodeBtn').classList.add('active-nav-btn');
-      document.getElementById('searchContainer').classList.add('hidden');
+      
+      // Update nav buttons
+      document.getElementById('viewCodeBtn').classList.remove('active');
+      document.getElementById('addCodeBtn').classList.add('active');
+      
+      // Hide search
+      document.getElementById('searchContainer').classList.add('d-none');
+      
+      // Reset form
       resetForm();
     }
 
@@ -435,6 +364,7 @@
       showCodeList();
     }
 
+    // Fetch and display snippets
     async function fetchSnippets() {
       try {
         const res = await fetch(API_URL);
@@ -447,7 +377,10 @@
         try { regex = query ? new RegExp(query, "i") : null; } catch { regex = null; }
 
         if (data.length === 0) {
-          container.innerHTML = `<div class="snippet"><p style="text-align:center;color:#6c757d;">No snippets found. Add your first code snippet above!</p></div>`;
+          container.innerHTML = `
+            <div class="alert alert-info text-center">
+              No snippets found. Add your first code snippet above!
+            </div>`;
           return;
         }
 
@@ -456,7 +389,10 @@
           : data;
           
         if (filteredData.length === 0) {
-          container.innerHTML = `<div class="snippet"><p style="text-align:center;color:#6c757d;">No snippets match your search.</p></div>`;
+          container.innerHTML = `
+            <div class="alert alert-info text-center">
+              No snippets match your search.
+            </div>`;
           return;
         }
 
@@ -467,54 +403,46 @@
             <div class="snippet" id="snippet-${snippet.id}">
               <!-- View Mode -->
               <div class="view-mode" id="view-${snippet.id}">
-                <div class="snippet-header">
-                  <h3 class="snippet-title">${escapeHtml(snippet.title)}</h3>
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <h3 class="h5 mb-0">${escapeHtml(snippet.title)}</h3>
                 </div>
-                <p class="snippet-description">${escapeHtml(snippet.description)}</p>
-                <div class="code-container">
+                <p class="text-muted mb-3">${escapeHtml(snippet.description)}</p>
+                <div class="code-container mb-3">
                   <button class="copy-btn" onclick="copyCode('${encodedCode}', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                      <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                    </svg>
-                    Copy
+                    <i class="fas fa-copy me-1"></i> Copy
                   </button>
                   <pre><code class="code-block">${escapeHtml(snippet.code)}</code></pre>
                 </div>
-                <div class="snippet-actions">
-                  <button class="btn-warning btn-sm" onclick="toggleEditMode(${snippet.id})">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                    </svg>
-                    Edit
+                <div class="d-flex flex-wrap gap-2">
+                  <button class="btn btn-warning btn-sm" onclick="toggleEditMode(${snippet.id})">
+                    <i class="fas fa-edit me-1"></i> Edit
                   </button>
-                  <button class="btn-danger btn-sm" onclick="deleteSnippet(${snippet.id})">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                      <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                    Delete
+                  <button class="btn btn-danger btn-sm" onclick="deleteSnippet(${snippet.id})">
+                    <i class="fas fa-trash-alt me-1"></i> Delete
                   </button>
                 </div>
               </div>
               
-              <!-- Edit Mode -->
-              <div class="edit-form" id="edit-${snippet.id}">
-                <input type="text" id="edit-title-${snippet.id}" value="${escapeHtml(snippet.title)}" placeholder="Title" required />
-                <input type="text" id="edit-description-${snippet.id}" value="${escapeHtml(snippet.description)}" placeholder="Description" required />
-                <textarea id="edit-code-${snippet.id}" rows="6" placeholder="Your code here..." required>${escapeHtml(snippet.code)}</textarea>
-                <div class="btn-group">
-                  <button class="btn-primary btn-sm" onclick="updateSnippet(${snippet.id})">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                    </svg>
-                    Save Changes
+              <!-- Edit Mode (hidden by default) -->
+              <div class="edit-form hidden" id="edit-${snippet.id}">
+                <div class="mb-3">
+                  <label for="edit-title-${snippet.id}" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="edit-title-${snippet.id}" value="${escapeHtml(snippet.title)}" placeholder="Title" required />
+                </div>
+                <div class="mb-3">
+                  <label for="edit-description-${snippet.id}" class="form-label">Description</label>
+                  <input type="text" class="form-control" id="edit-description-${snippet.id}" value="${escapeHtml(snippet.description)}" placeholder="Description" required />
+                </div>
+                <div class="mb-3">
+                  <label for="edit-code-${snippet.id}" class="form-label">Code</label>
+                  <textarea class="form-control" id="edit-code-${snippet.id}" rows="10" placeholder="Your code here..." required>${escapeHtml(snippet.code)}</textarea>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                  <button class="btn btn-primary btn-sm" onclick="updateSnippet(${snippet.id})">
+                    <i class="fas fa-check me-1"></i> Save Changes
                   </button>
-                  <button class="btn-secondary btn-sm" onclick="toggleEditMode(${snippet.id})">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
-                    </svg>
-                    Cancel
+                  <button class="btn btn-secondary btn-sm" onclick="cancelEditMode(${snippet.id})">
+                    <i class="fas fa-times me-1"></i> Cancel
                   </button>
                 </div>
               </div>
@@ -532,14 +460,81 @@
       }
     }
 
+    // Toggle edit mode for a specific snippet
     function toggleEditMode(id) {
+      // If another snippet is already being edited, prevent this one from opening
+      if (isAnySnippetBeingEdited && activeEditId !== id) {
+        showToast('Please save or cancel your current edits first');
+        return;
+      }
+      
+      const snippetElement = document.getElementById(`snippet-${id}`);
       const viewMode = document.getElementById(`view-${id}`);
       const editMode = document.getElementById(`edit-${id}`);
       
-      viewMode.classList.toggle('hidden');
-      editMode.classList.toggle('active');
+      // Toggle visibility
+      if (viewMode.classList.contains('hidden')) {
+        // Switch back to view mode
+        viewMode.classList.remove('hidden');
+        editMode.classList.add('hidden');
+        snippetElement.classList.remove('editing-active');
+        isAnySnippetBeingEdited = false;
+        activeEditId = null;
+      } else {
+        // Switch to edit mode
+        viewMode.classList.add('hidden');
+        editMode.classList.remove('hidden');
+        snippetElement.classList.add('editing-active');
+        isAnySnippetBeingEdited = true;
+        activeEditId = id;
+      }
+      
+      // Update UI state based on edit mode
+      if (isAnySnippetBeingEdited) {
+        // Hide search and show notification when editing
+        document.getElementById('searchContainer').classList.add('d-none');
+        document.getElementById('edit-status-indicator').classList.add('active');
+        
+        // Scroll to the snippet being edited
+        snippetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Automatically focus on the title field
+        document.getElementById(`edit-title-${id}`).focus();
+      } else {
+        // Show search and hide notification when not editing
+        document.getElementById('searchContainer').classList.remove('d-none');
+        document.getElementById('edit-status-indicator').classList.remove('active');
+      }
+      
+      // Adjust textarea height based on content
+      const codeTextarea = document.getElementById(`edit-code-${id}`);
+      if (codeTextarea && !editMode.classList.contains('hidden')) {
+        codeTextarea.style.height = "auto";
+        codeTextarea.style.height = (codeTextarea.scrollHeight + 5) + "px";
+      }
+    }
+    
+    // Cancel edit mode for a specific snippet
+    function cancelEditMode(id) {
+      const snippetElement = document.getElementById(`snippet-${id}`);
+      const viewMode = document.getElementById(`view-${id}`);
+      const editMode = document.getElementById(`edit-${id}`);
+      
+      // Exit edit mode
+      viewMode.classList.remove('hidden');
+      editMode.classList.add('hidden');
+      snippetElement.classList.remove('editing-active');
+      
+      // Update global editing state
+      isAnySnippetBeingEdited = false;
+      activeEditId = null;
+      
+      // Show search and hide notification
+      document.getElementById('searchContainer').classList.remove('d-none');
+      document.getElementById('edit-status-indicator').classList.remove('active');
     }
 
+    // Save new snippet
     async function saveSnippet() {
       const id = document.getElementById("snippetId").value;
       const title = document.getElementById("title").value;
@@ -574,6 +569,7 @@
       }
     }
 
+    // Update existing snippet
     async function updateSnippet(id) {
       const title = document.getElementById(`edit-title-${id}`).value;
       const description = document.getElementById(`edit-description-${id}`).value;
@@ -595,7 +591,14 @@
           throw new Error(`Server responded with ${response.status}`);
         }
 
-        toggleEditMode(id);
+        // Update global editing state
+        isAnySnippetBeingEdited = false;
+        activeEditId = null;
+        
+        // Show search and hide notification
+        document.getElementById('searchContainer').classList.remove('d-none');
+        document.getElementById('edit-status-indicator').classList.remove('active');
+        
         fetchSnippets();
         showToast("Snippet updated successfully");
       } catch (error) {
@@ -604,6 +607,7 @@
       }
     }
 
+    // Delete snippet
     async function deleteSnippet(id) {
       if (!confirm("Are you sure you want to delete this snippet?")) return;
       
@@ -622,6 +626,7 @@
       }
     }
 
+    // Reset form fields
     function resetForm() {
       document.getElementById("snippetId").value = "";
       document.getElementById("title").value = "";
@@ -629,13 +634,11 @@
       document.getElementById("code").value = "";
       document.getElementById("form-title").innerText = "Add New Snippet";
       document.getElementById("saveBtn").innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
-        </svg>
-        Save Snippet
+        <i class="fas fa-save me-1"></i> Save Snippet
       `;
     }
 
+    // Copy code to clipboard
     function copyCode(encodedCode, button) {
       const code = decodeURIComponent(encodedCode);
       navigator.clipboard.writeText(code);
@@ -643,10 +646,7 @@
       // Visual feedback
       const originalText = button.innerHTML;
       button.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-        </svg>
-        Copied!
+        <i class="fas fa-check me-1"></i> Copied!
       `;
       
       setTimeout(() => {
@@ -664,22 +664,26 @@
         .replace(/'/g, "&#039;");
     }
 
+    // Adjust textarea height based on content
+    function autoResizeTextarea(textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = (textarea.scrollHeight) + "px";
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       // Set up debounced search
       const debouncedSearch = debounce(fetchSnippets, 500);
       document.getElementById('search').addEventListener('input', debouncedSearch);
       
-      // Add date/time stamp in footer
-      const footer = document.createElement('footer');
-      footer.style.textAlign = 'center';
-      footer.style.padding = '20px';
-      footer.style.color = 'var(--gray)';
-      footer.style.fontSize = '12px';
-      footer.innerHTML = `Last updated: 2025-08-25 06:34:34 UTC | User: ManojGowda89`;
-      document.body.appendChild(footer);
-      
       showCodeList(); // Default to showing code list
+      
+      // Add event listener for auto-resizing textareas
+      document.addEventListener('input', function(e) {
+        if (e.target.tagName.toLowerCase() === 'textarea') {
+          autoResizeTextarea(e.target);
+        }
+      });
     });
   </script>
 </body>
