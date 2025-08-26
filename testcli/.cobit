@@ -1,10 +1,17 @@
 {
-  "id": "4rduhZS0",
+  "id": "YvmfzN1LLqmqY",
   "staged": [],
   "commits": [
     {
       "id": 1756188965428,
       "message": "testing cli",
+      "files": [
+        "index.js"
+      ]
+    },
+    {
+      "id": 1756190091273,
+      "message": "skdj",
       "files": [
         "index.js"
       ]

@@ -9,13 +9,7 @@ module.exports = async function push() {
     return;
   }
 
-  // Push latest commit only (fits single-snippet model)
-  const latest = cobit.commits[cobit.commits.length - 1];
 
-  if (!latest.files || latest.files.length === 0) {
-    console.log('❌ Latest commit has no files.');
-    return;
-  }
 
   const filename = latest.files[0];
   if (!fs.existsSync(filename)) {

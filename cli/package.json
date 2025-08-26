@@ -1,5 +1,5 @@
 {
-  "name": "cobit",
+"name": "@manoj2002/cobit",
   "version": "1.0.0",
   "description": "Cobit CLI for Code Keeper (snippet-based)",
   "bin": {

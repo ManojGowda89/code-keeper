@@ -48,8 +48,7 @@ const Snippet = sequelize.define("Snippet", {
 });
 
 // Sync database
-sequelize.sync({ force: true }).then(() => console.log("Database reset with string ID!"));
-
+sequelize.sync().then(() => console.log("Database & tables ready!"));
 
 // Routes
 
