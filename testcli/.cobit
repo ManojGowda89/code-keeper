@@ -1,0 +1,13 @@
+{
+  "id": "4rduhZS0",
+  "staged": [],
+  "commits": [
+    {
+      "id": 1756188965428,
+      "message": "testing cli",
+      "files": [
+        "index.js"
+      ]
+    }
+  ]
+}

@@ -48,7 +48,8 @@ const Snippet = sequelize.define("Snippet", {
 });
 
 // Sync database
-sequelize.sync().then(() => console.log("Database & tables ready!"));
+sequelize.sync({ force: true }).then(() => console.log("Database reset with string ID!"));
+
 
 // Routes
 
@@ -133,6 +134,18 @@ app.delete("/api/snippets/:id", async (req, res) => {
     if (!snippet) return res.status(404).json({ error: "Snippet not found" });
     await snippet.destroy();
     res.json({ message: "Deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+app.get("/api/snippets/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const snippet = await Snippet.findByPk(id);
+    if (!snippet) return res.status(404).json({ error: "Snippet not found" });
+    res.json(snippet);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
