@@ -290,9 +290,14 @@
               <i class="fas fa-list me-1"></i> Code
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item me-2">
             <a id="addCodeBtn" class="nav-link" href="javascript:void(0)" onclick="showAddForm()">
               <i class="fas fa-plus me-1"></i> Add Code
+            </a>
+          </li>
+          <li class="nav-item">
+            <a id="cliInfoBtn" class="nav-link" href="javascript:void(0)" onclick="showCliInfo()">
+              <i class="fas fa-terminal me-1"></i> CLI
             </a>
           </li>
         </ul>
@@ -357,6 +362,265 @@
         <p>You've reached the end of your snippets!</p>
       </div>
     </div>
+
+    <!-- CLI Section -->
+    <div id="cliSection" class="form-container hidden">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">COBIT CLI</h2>
+      </div>
+      
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h3 class="h5 mb-0">What is COBIT?</h3>
+        </div>
+        <div class="card-body">
+          <p>COBIT is a code keeper - not a git alternative, but a simple tool designed to store and organize important code snippets.</p>
+          
+          <p><strong>With COBIT, you can:</strong></p>
+          <ul>
+            <li>Save important code snippets you find that might be useful in the future</li>
+            <li>Store anything from simple one-liners to complex algorithms</li>
+            <li>Access your code from anywhere through the web interface at <a href="https://cobit.manojgowda.in/" target="_blank">cobit.manojgowda.in</a></li>
+            <li>Share snippets with friends or a community of developers</li>
+            <li>Manage your code through both web and command-line interfaces</li>
+          </ul>
+          
+          <p>COBIT is perfect for developers who want to build a personal library of useful code without the complexity of a full version control system.</p>
+        </div>
+      </div>
+      
+      <div class="alert alert-info">
+        <i class="fas fa-terminal me-2"></i> COBIT is available as a command-line tool for managing your snippets directly from your terminal!
+      </div>
+      
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h3 class="h5 mb-0">Prerequisites</h3>
+        </div>
+        <div class="card-body">
+          <p>Before installing COBIT CLI, you need to have Node.js and npm installed on your system:</p>
+          
+          <ul class="nav nav-tabs mb-3" id="prereqTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="windows-tab" data-bs-toggle="tab" data-bs-target="#windows" type="button" role="tab" aria-controls="windows" aria-selected="true">Windows</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="macos-tab" data-bs-toggle="tab" data-bs-target="#macos" type="button" role="tab" aria-controls="macos" aria-selected="false">macOS</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="linux-tab" data-bs-toggle="tab" data-bs-target="#linux" type="button" role="tab" aria-controls="linux" aria-selected="false">Linux</button>
+            </li>
+          </ul>
+          
+          <div class="tab-content" id="prereqTabsContent">
+            <div class="tab-pane fade show active" id="windows" role="tabpanel" aria-labelledby="windows-tab">
+              <h4 class="h6 mb-3">Option 1: Using Chocolatey (Recommended)</h4>
+              <p>1. Install Chocolatey package manager:</p>
+              <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('Set-ExecutionPolicy%20Bypass%20-Scope%20Process%20-Force%3B%20%5BSystem.Net.ServicePointManager%5D%3A%3ASecurityProtocol%20%3D%20%5BSystem.Net.ServicePointManager%5D%3A%3ASecurityProtocol%20-bor%203072%3B%20iex%20((New-Object%20System.Net.WebClient).DownloadString(%27https%3A%2F%2Fchocolatey.org%2Finstall.ps1%27))', this)">
+                  <i class="fas fa-copy me-1"></i> Copy
+                </button>
+                <pre><code class="language-powershell">Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))</code></pre>
+              </div>
+              <p>2. Install Node.js and npm using Chocolatey:</p>
+              <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('choco%20install%20nodejs%20-y', this)">
+                  <i class="fas fa-copy me-1"></i> Copy
+                </button>
+                <pre><code class="language-powershell">choco install nodejs -y</code></pre>
+              </div>
+              
+              <h4 class="h6 mb-3 mt-4">Option 2: Direct Download</h4>
+              <p>Download and install Node.js from the <a href="https://nodejs.org/en/download/" target="_blank">official website</a>.</p>
+            </div>
+            
+            <div class="tab-pane fade" id="macos" role="tabpanel" aria-labelledby="macos-tab">
+              <h4 class="h6 mb-3">Option 1: Using Homebrew (Recommended)</h4>
+              <p>1. Install Homebrew if you haven't already:</p>
+              <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('%2Fbin%2Fbash%20-c%20%22%24(curl%20-fsSL%20https%3A%2F%2Fraw.githubusercontent.com%2FHomebrew%2Finstall%2Fmaster%2Finstall.sh)%22', this)">
+                  <i class="fas fa-copy me-1"></i> Copy
+                </button>
+                <pre><code class="language-bash">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"</code></pre>
+              </div>
+              <p>2. Install Node.js and npm using Homebrew:</p>
+              <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('brew%20install%20node', this)">
+                  <i class="fas fa-copy me-1"></i> Copy
+                </button>
+                <pre><code class="language-bash">brew install node</code></pre>
+              </div>
+              
+              <h4 class="h6 mb-3 mt-4">Option 2: Direct Download</h4>
+              <p>Download and install Node.js from the <a href="https://nodejs.org/en/download/" target="_blank">official website</a>.</p>
+            </div>
+            
+            <div class="tab-pane fade" id="linux" role="tabpanel" aria-labelledby="linux-tab">
+              <h4 class="h6 mb-3">Option 1: Using Package Manager (Ubuntu/Debian)</h4>
+              <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('curl%20-fsSL%20https%3A%2F%2Fdeb.nodesource.com%2Fsetup_18.x%20%7C%20sudo%20-E%20bash%20-%0Asudo%20apt-get%20install%20-y%20nodejs', this)">
+                  <i class="fas fa-copy me-1"></i> Copy
+                </button>
+                <pre><code class="language-bash">curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs</code></pre>
+              </div>
+              
+              <h4 class="h6 mb-3 mt-4">Option 2: For other Linux distributions</h4>
+              <p>Please check the <a href="https://nodejs.org/en/download/package-manager/" target="_blank">Node.js installation guide</a> for your specific distribution.</p>
+            </div>
+          </div>
+          
+          <div class="alert alert-success mt-3">
+            <i class="fas fa-check-circle me-2"></i> To verify your installation, run the following commands:
+            <div class="code-container mt-2">
+              <button class="copy-btn" onclick="copyCode('node%20--version%0Anpm%20--version', this)">
+                <i class="fas fa-copy me-1"></i> Copy
+              </button>
+              <pre><code class="language-bash">node --version
+npm --version</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h3 class="h5 mb-0">Installation</h3>
+        </div>
+        <div class="card-body">
+          <p>Once Node.js and npm are installed, install COBIT CLI globally:</p>
+          <div class="code-container">
+            <button class="copy-btn" onclick="copyCode('npm%20install%20%40manoj2002%2Fcobit%20-g', this)">
+              <i class="fas fa-copy me-1"></i> Copy
+            </button>
+            <pre><code class="language-bash">npm install @manoj2002/cobit -g</code></pre>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h3 class="h5 mb-0">Commands Reference</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Command</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>cobit init</code></td>
+                  <td>Initialize a new Cobit repo (creates remote snippet and saves .cobit)</td>
+                </tr>
+                <tr>
+                  <td><code>cobit add &lt;filename...&gt;</code></td>
+                  <td>Stage file(s) for commit</td>
+                </tr>
+                <tr>
+                  <td><code>cobit commit &lt;message&gt;</code></td>
+                  <td>Create a commit from staged files</td>
+                </tr>
+                <tr>
+                  <td><code>cobit push</code></td>
+                  <td>Push the latest commit to the remote snippet</td>
+                </tr>
+                <tr>
+                  <td><code>cobit clone &lt;repoId&gt;</code></td>
+                  <td>Clone a Cobit repo by ID</td>
+                </tr>
+                <tr>
+                  <td><code>cobit status</code></td>
+                  <td>Show repo ID, staged files, and commits</td>
+                </tr>
+                <tr>
+                  <td><code>cobit help</code></td>
+                  <td>Display help information</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h3 class="h5 mb-0">Usage Examples</h3>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <h4 class="h6">Initialize a new repository</h4>
+            <div class="code-container">
+              <button class="copy-btn" onclick="copyCode('cobit%20init', this)">
+                <i class="fas fa-copy me-1"></i> Copy
+              </button>
+              <pre><code class="language-bash">cobit init</code></pre>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <h4 class="h6">Stage files</h4>
+            <div class="code-container">
+              <button class="copy-btn" onclick="copyCode('cobit%20add%20index.js%20styles.css', this)">
+                <i class="fas fa-copy me-1"></i> Copy
+              </button>
+              <pre><code class="language-bash">cobit add index.js styles.css</code></pre>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <h4 class="h6">Create a commit</h4>
+            <div class="code-container">
+              <button class="copy-btn" onclick="copyCode('cobit%20commit%20%22Add%20initial%20files%22', this)">
+                <i class="fas fa-copy me-1"></i> Copy
+              </button>
+              <pre><code class="language-bash">cobit commit "Add initial files"</code></pre>
+            </div>
+          </div>   <div class="mb-3">
+            <h4 class="h6">Push a code</h4>
+            <div class="code-container">
+              <button class="copy-btn" onclick="copyCode('cobit%20push', this)">
+                <i class="fas fa-copy me-1"></i> Copy
+              </button>
+              <pre><code class="language-bash">cobit push</code></pre>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <h4 class="h6">Clone an existing repository</h4>
+            <div class="code-container">
+              <button class="copy-btn" onclick="copyCode('cobit%20clone%20abc123', this)">
+                <i class="fas fa-copy me-1"></i> Copy
+              </button>
+              <pre><code class="language-bash">cobit clone abc123</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h3 class="h5 mb-0">Web & CLI Integration</h3>
+        </div>
+        <div class="card-body">
+          <p>COBIT CLI and web interface work together seamlessly:</p>
+          <ul>
+            <li>Code snippets created via CLI can be viewed and edited in the web interface</li>
+            <li>Use the CLI to manage code directly from your development environment</li>
+            <li>Share snippet IDs with team members for easy collaboration</li>
+            <li>Access your snippets from anywhere with the web interface</li>
+          </ul>
+          <p class="mt-3">
+            <a href="https://github.com/ManojGowda89/code-keeper" target="_blank" class="btn btn-outline-primary">
+              <i class="fab fa-github me-2"></i>View on GitHub
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="toast-container">
@@ -365,7 +629,7 @@
 
   <footer class="app-footer text-center text-muted">
     <div class="container">
-      <small>Last updated: 2025-08-25 16:38:19 UTC | Developed by: ManojGowda mail@manojgowda.in</small>
+      <small>Last updated: 2025-08-26 07:19:16 UTC | Developed by: ManojGowda89 mail@manojgowda.in</small>
     </div>
   </footer>
 
@@ -415,13 +679,15 @@
         return;
       }
       
-      // Hide add form, show snippets list
+      // Hide add form and CLI section, show snippets list
       document.getElementById('formSection').classList.add('hidden');
       document.getElementById('snippetsSection').classList.remove('hidden');
+      document.getElementById('cliSection').classList.add('hidden');
       
       // Update nav buttons
       document.getElementById('viewCodeBtn').classList.add('active');
       document.getElementById('addCodeBtn').classList.remove('active');
+      document.getElementById('cliInfoBtn').classList.remove('active');
       
       // Show search
       document.getElementById('searchContainer').classList.remove('d-none');
@@ -448,19 +714,48 @@
         return;
       }
       
-      // Show add form, hide snippets list
+      // Show add form, hide snippets list and CLI section
       document.getElementById('formSection').classList.remove('hidden');
       document.getElementById('snippetsSection').classList.add('hidden');
+      document.getElementById('cliSection').classList.add('hidden');
       
       // Update nav buttons
       document.getElementById('viewCodeBtn').classList.remove('active');
       document.getElementById('addCodeBtn').classList.add('active');
+      document.getElementById('cliInfoBtn').classList.remove('active');
       
       // Hide search
       document.getElementById('searchContainer').classList.add('d-none');
       
       // Reset form
       resetForm();
+    }
+
+    // Show CLI information section
+    function showCliInfo() {
+      // Only allow switching to CLI info if not in edit mode
+      if (isAnySnippetBeingEdited) {
+        showToast('Please save or cancel your edits first');
+        return;
+      }
+      
+      // Hide other sections, show CLI section
+      document.getElementById('formSection').classList.add('hidden');
+      document.getElementById('snippetsSection').classList.add('hidden');
+      document.getElementById('cliSection').classList.remove('hidden');
+      
+      // Update nav buttons
+      document.getElementById('viewCodeBtn').classList.remove('active');
+      document.getElementById('addCodeBtn').classList.remove('active');
+      document.getElementById('cliInfoBtn').classList.add('active');
+      
+      // Hide search
+      document.getElementById('searchContainer').classList.add('d-none');
+      
+      // Apply syntax highlighting to code blocks in the CLI section
+      document.querySelectorAll('#cliSection pre code:not(.hljs)').forEach((block) => {
+        hljs.highlightElement(block);
+      });
     }
 
     function cancelForm() {
