@@ -4,13 +4,7 @@ const axios = require('axios');
 const { writeCobitFile, getSnippetUrl } = require('./utils');
 
 module.exports = async function clone(repoId) {
-  const folderName = `cobit-${repoId}`;
-  const repoPath = path.join(process.cwd(), folderName);
-
-  if (fs.existsSync(repoPath)) {
-    console.log(`❌ Folder already exists: ${folderName}`);
-    return;
-  }
+  const repoPath = process.cwd(); // current folder
 
   try {
     const res = await axios.get(getSnippetUrl(repoId));
@@ -21,24 +15,31 @@ module.exports = async function clone(repoId) {
       return;
     }
 
-    fs.mkdirSync(repoPath, { recursive: true });
-
     // Decide local filename
     let filename = (snippet.title || 'snippet').trim();
     if (!path.extname(filename)) {
-      // no extension? default to .txt
       filename += '.txt';
     }
 
-    // Write code file
+    // Write code file directly into current folder
     const filePath = path.join(repoPath, filename);
+    if (fs.existsSync(filePath)) {
+      console.log(`⚠️ File already exists, overwriting: ${filename}`);
+    }
     fs.writeFileSync(filePath, snippet.code || '', 'utf-8');
 
-    // Write .cobit
-    const cobit = { id: snippet.id, staged: [], commits: [] };
-    fs.writeFileSync(path.join(repoPath, '.cobit'), JSON.stringify(cobit, null, 2));
+    // Update or create .cobit
+    const cobitFilePath = path.join(repoPath, '.cobit');
+    let cobit = { id: repoId, staged: [], commits: [] };
 
-    console.log(`✅ Cloned ${repoId} -> ${folderName}/${filename}`);
+    if (fs.existsSync(cobitFilePath)) {
+      const existing = JSON.parse(fs.readFileSync(cobitFilePath, 'utf-8'));
+      cobit = { ...existing, id: repoId }; // keep existing staged/commits
+    }
+
+    fs.writeFileSync(cobitFilePath, JSON.stringify(cobit, null, 2));
+
+    console.log(`✅ Cloned snippet ${repoId} into current folder: ${filename}`);
   } catch (err) {
     console.log('❌ Clone failed:', err.response?.data || err.message);
   }
